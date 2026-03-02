@@ -1,0 +1,47 @@
+import numpy as np
+from collections import Counter
+
+# Training Data
+# [Study Hours, Attendance]
+X_train = np.array([
+    [2, 30],   # S1 - Fail
+    [3, 35],   # S2 - Fail
+    [5, 60],   # S3 - Pass
+    [6, 65]    # S4 - Pass
+])
+
+y_train = np.array(["Fail", "Fail", "Pass", "Pass"])
+
+# New student data
+new_student = np.array([4, 50])
+
+# Set K value
+k = 3
+
+# Step 1: Calculate Euclidean distance
+distances = []
+
+for i in range(len(X_train)):
+    distance = np.linalg.norm(X_train[i] - new_student)
+    distances.append((round(distance, 3), y_train[i]))
+
+# Step 2: Sort by distance
+distances = sorted(distances, key=lambda x: x[0])
+
+# Step 3: Get k nearest neighbors
+k_neighbors = distances[:k]
+
+# Step 4: Majority vote
+labels = [label for _, label in k_neighbors]
+prediction = Counter(labels).most_common(1)[0][0]
+
+# Output
+print("Distances (sorted):")
+for d in distances:
+    print(d)
+
+print("\nK Nearest Neighbors:")
+for neighbor in k_neighbors:
+    print(neighbor)
+
+print("\nPredicted Result for new student:", prediction)
